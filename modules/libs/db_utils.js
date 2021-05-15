@@ -12,9 +12,11 @@
 //									require modlues 											 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 const { Pool, Client } = require('pg');
+
 const pool = new Pool({
   user: 'tony',
   host: 'localhost',
+  port: 5432,
   database: 'bg_programming_infinite_posts',
 //   password: 'h!re~city'
 });
@@ -25,6 +27,49 @@ function DB_Utils()
 {	
 
 }
+
+
+DB_Utils.prototype.assertNumbers = function ( /* ... */ )
+{
+    "use strict";
+    for( var i = 0;     i < arguments.length;   ++i )         
+        assert( arguments[i].constructor === Number );     
+};
+
+DB_Utils.prototype.assertBooleans = function ( /* ... */ )
+{
+    "use strict";
+    for( var i = 0;     i < arguments.length;   ++i )
+        assert( arguments[i].constructor === Boolean );
+};
+
+
+DB_Utils.prototype.assertArrays = function ( /* ... */ )
+{
+    "use strict";
+    for( var i = 0;     i < arguments.length;   ++i )
+        assert( arguments[i].constructor === Array );
+};
+
+
+
+DB_Utils.prototype.assertStrings = function ( /* ... */ )
+{
+    "use strict";
+    for( var i = 0;     i < arguments.length;   ++i )
+        assert( arguments[i].constructor === String );
+};
+
+
+
+DB_Utils.prototype.assertFunctions = function ( /* ... */ )
+{
+    "use strict";
+    for( var i = 0;     i < arguments.length;   ++i )
+        assert( arguments[i].constructor === Function );
+};
+
+
 
 class QueryBuildData {
     constructor(client) {
@@ -69,6 +114,7 @@ DB_Utils.prototype.defaultQuery =  async function (callback)  {
 
 DB_Utils.prototype.defaultQueryWithTransaction =  async function (callback)  {
     const client = await pool.connect();
+
     try {
         await client.query('BEGIN');
         const result = await callback(client);

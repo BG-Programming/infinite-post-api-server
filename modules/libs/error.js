@@ -36,6 +36,7 @@ const ErrorCodes =
 	ERROR_DUPLICATE_NAME : 4000,
 	ERROR_DUPLICATE_DATA : 4001,	
 	ERROR_BAD_REQUEST : 4002,
+	ERROR_CODE_EMAIL_ALREADY_EXISTS: 4004
 };
 
 function AppError( nResponseCode, nAppErrorCode, strDetailMessage )
@@ -106,6 +107,7 @@ function newInstanceBadRequest( strMessage )
 function getErrorString( nErrorCode )
 {
     "use strict";
+
 	switch( nErrorCode )
 	{
 		case ErrorCodes.ERROR_CODE_INVALID_USER_ID_OR_PASSWORD :
@@ -138,6 +140,8 @@ function getErrorString( nErrorCode )
 			return "Bad Request";
 		case ErrorCodes.ERROR_CODE_USER_NOT_EXISTS : 
 			return "User not founded!";
+		case ErrorCodes.ERROR_CODE_EMAIL_ALREADY_EXISTS:
+			return "An user already exists with the email."
 		default :
 			assert(false);
 	}

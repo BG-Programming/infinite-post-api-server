@@ -158,8 +158,7 @@ Auth.prototype.getSecurityToken = function( strEmail )
 		if( 	info.email === strEmail ) 
 		{
 			// Security token을 사용하면 마지막 접근 시간을 갱신한다
-			info.lastAccessTime = Date.now();			
-			console.log("return exists token");
+			info.lastAccessTime = Date.now();
 			return token;
 		}
 	}
