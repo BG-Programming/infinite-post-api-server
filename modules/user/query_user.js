@@ -1,5 +1,4 @@
-const { error, assert, define, config, db_utils, db_query }   = require("../libs/stdlib.js" );
-const { v4: uuidv4 } = require('uuid');
+const { assert } = require("../libs/stdlib.js" );
 
 module.exports.userExistsWithEmail = async function ( client, strEmail ) {
     const result = await client.query(

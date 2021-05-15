@@ -1,12 +1,13 @@
-const { utils, define, error }      = require("../libs/stdlib.js" );
-const db     	  	= require("./db_user.js" );
+const { utils }         = require("../libs/stdlib.js" );
+const auth              = require("../libs/auth");
+const db     	  	    = require("./db_user.js" );
 
 module.exports.route = function(api, app) {
-    api.guest.post('/api/user/login',       login);
-    api.guest.post('/api/signup',      signup);
+    api.guest.post('/api/login',       login);
+    api.guest.post('/api/signup',           signup);
 }
 
-async function signup(params, body) {
+async function signup(_, body) {
     "use strict";
 
     const {email, password, nickname} = body;
@@ -14,7 +15,7 @@ async function signup(params, body) {
     await db.signup(email, nickname, password);
 }
 
-async function login(params, body) {
+async function login(_, body) {
     "use strict";
     const {email, password} = body;
     utils.checkRequiredStringParameter(email, password);   
@@ -22,16 +23,13 @@ async function login(params, body) {
     const strEmail = email.toLowerCase();
     const jsonUserData = await auth.login( strEmail, body.password );
 
-    // let strSecurityToken = auth.getSecurityToken( jsonUserData.email );
+    let strSecurityToken = auth.getSecurityToken( jsonUserData.email );
 
-    // if( strSecurityToken === null )
-    //     strSecurityToken = auth.insertSecurityToken( jsonUserData );
+    if( strSecurityToken === null )
+        strSecurityToken = auth.insertSecurityToken( jsonUserData );
 
     return {
-        hello: 'world'
-    }
-    // return {
-    //     token           : strSecurityToken,
-    //     userInfo        : jsonUserData,
-    // };
+        token           : strSecurityToken,
+        userInfo        : jsonUserData,
+    };
 }

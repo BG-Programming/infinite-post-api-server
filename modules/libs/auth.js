@@ -11,12 +11,11 @@ async function checkPassword(strPlainText, strEncryptedPassword ) {
 
 async function getUserLoginData ( client, strEmail ) {
       const result = await client.query(           
-        'SELECT     tu.id, ' +
-                    'tu.nickname as "nickname", ' +
-                    'tu.email, ' +
-                    'tu.type as "userType", ' +
-                    'trim(tu.password) as password ' +
-        'FROM       t_user tu ' + 
+        'SELECT     id, ' +
+                    'nickname, ' +
+                    'email, ' +
+                    'trim(pw) as password ' +
+        'FROM      	public.user tu ' + 
         'WHERE      lower(email)=$1  '
         ,[  strEmail ]
     );
@@ -29,14 +28,6 @@ async function getUserLoginData ( client, strEmail ) {
     return result.rows[0];    
 };
 
-async function updateUserLastLoginTime ( client, nUserId ) {
-      client.query(           
-        'UPDATE     t_user ' + 
-        "SET        last_login_time = now() at time zone 'utc' " +
-        'WHERE      id = $1 '
-        ,[ nUserId ]        
-    );
-};
 
 async function login ( strEmailOrNickname, strPassword ) {
     "use strict";    
@@ -46,7 +37,7 @@ async function login ( strEmailOrNickname, strPassword ) {
 		
         if( isVerify === false )
         	throw error.newInstanceForbiddenError();
-        await updateUserLastLoginTime(client, userData.id);
+			
         delete userData.password;
         return userData;
     });

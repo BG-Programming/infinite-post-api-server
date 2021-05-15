@@ -6,15 +6,11 @@ const logger = require('morgan');
 const cors = require('cors');
 const app = express();
 
-// var indexRouter = require('./routes/index');
-// var userRouter = require('./routes/user');
-
-
 // Release 에서는 사용하지 않을것 
 app.use(cors());
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// app.set('views', path.join(__dirname, 'views'));
 
 app.use(logger('dev'));
 app.use(express.json());
