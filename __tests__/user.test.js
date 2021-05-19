@@ -6,7 +6,7 @@ describe("bg-programming-api-test", () => {
   // it('signup 200', async (done) => {
   //   await request(app)
   //       .post('/api/signup')
-  //       .send({email: 'bg12345333@programming.com', nickname: 'BG1233345', password: '12341234'})
+  //       .send({email: 'root@programming.com', nickname: 'root_user', password: '1234'})
   //       .set("Accept", "application/json")
   //       .expect(200)
   //       .then(res => {
@@ -20,19 +20,51 @@ describe("bg-programming-api-test", () => {
   // });
 
   it("login", async (done) => {
+    const resToken = await new Promise((resolve, reject) => {
+      request(app)
+        .post("/api/login")
+        .send({email: 'root@programming.com', password: '1234'})
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then(res => {
+          resolve(res.body.token);
+          // done();
+        })
+        .catch(err => {
+          // console.error(err);
+          done(err)
+        });
+    });
+
     await request(app)
-      .post("/api/login")
-      .send({email: 'bg12345333@programming.com', password: '12341234'})
+      .get("/api/posts/12")
+      .set("Authorization", resToken)
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)
       .then(res => {
-        console.log('body >>>', res.body)
         done();
       })
       .catch(err => {
-        console.error(err);
         done(err)
       });
+
+    // await request(app)
+    //   .post("/api/post")
+    //   .send({parentId: 12, title: "random 123123123123", content: "good job~!"})
+    //   .set("Authorization", resToken)
+    //   .set('Accept', 'application/json')
+    //   .expect("Content-Type", /json/)
+    //   .expect(200)
+    //   .then(res => {
+    //     // resolve(res.body);
+    //     done();
+    //   })
+    //   .catch(err => {
+    //     console.error(err);
+    //     // reject(err);
+    //     done(err)
+    //   });
   });
 });

@@ -5,6 +5,7 @@ async function defaultProc(request, response, fnExecute) {
 	"use strict";    
 	try {
 		const userInfo = utils.getUserInfoAndRejectNotMember( request );
+
 		if( !userInfo )
 			throw error.newInstanceForbiddenError();
 		

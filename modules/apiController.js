@@ -5,4 +5,5 @@ module.exports.route = function(app)
 	api.init(app);
 
 	require("./user/userController.js" ).route(api, app);
+	require("./post/postController.js").route(api, app);
 };

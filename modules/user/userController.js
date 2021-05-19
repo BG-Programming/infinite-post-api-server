@@ -1,6 +1,6 @@
 const { utils }         = require("../libs/stdlib.js" );
 const auth              = require("../libs/auth");
-const db     	  	    = require("./db_user.js" );
+const db     	  	    = require("./dbUser.js" );
 
 module.exports.route = function(api, app) {
     api.guest.post('/api/login',       login);
@@ -17,6 +17,7 @@ async function signup(_, body) {
 
 async function login(_, body) {
     "use strict";
+    
     const {email, password} = body;
     utils.checkRequiredStringParameter(email, password);   
 

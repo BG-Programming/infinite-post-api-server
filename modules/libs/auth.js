@@ -15,7 +15,7 @@ async function getUserLoginData ( client, strEmail ) {
                     'nickname, ' +
                     'email, ' +
                     'trim(pw) as password ' +
-        'FROM      	public.user tu ' + 
+        'FROM      	user_account tu ' + 
         'WHERE      lower(email)=$1  '
         ,[  strEmail ]
     );
@@ -119,14 +119,13 @@ Auth.prototype._containToken = function( strSecurityToken )
 };
 
 
-Auth.prototype._insertSecurityTokenTable = function( strSecurityToken, nUserId, strEmail, strType, info )
+Auth.prototype._insertSecurityTokenTable = function( strSecurityToken, nUserId, strEmail, info )
 {
     "use strict";
 	this.tableSecurityToken[ strSecurityToken ] = 
 		{			
 			lastAccessTime 	: Date.now(),
 			userId			: nUserId,
-			userType 		: strType,
 			email			: strEmail,
 			nickname 		: info.nickname
 		};
@@ -169,7 +168,7 @@ Auth.prototype.insertSecurityToken = function( jsonUserData )
 		isContain = this._containToken(strSecurityToken);
 	} while( isContain === true );
 	
-	this._insertSecurityTokenTable( strSecurityToken, jsonUserData.id, jsonUserData.email, jsonUserData.userType, jsonUserData);
+	this._insertSecurityTokenTable( strSecurityToken, jsonUserData.id, jsonUserData.email, jsonUserData);
 	return strSecurityToken;
 };
 

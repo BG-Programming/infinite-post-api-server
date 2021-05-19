@@ -1,6 +1,6 @@
 
 const {  error,  db_utils } = require("../libs/stdlib.js" );
-const query         = require("./query_user.js");
+const query         = require("./queryUser.js");
 const argon2        = require('argon2');
 
 module.exports.signup = async function( strEmail, strNickname, strPassword ) {

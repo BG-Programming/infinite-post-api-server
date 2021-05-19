@@ -9,9 +9,6 @@ const app = express();
 // Release 에서는 사용하지 않을것 
 app.use(cors());
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
