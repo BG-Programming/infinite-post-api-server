@@ -64,7 +64,6 @@ Utils.prototype.sendErrorMessageInternalServerError = function( response )
 	);	
 };
 
-
 Utils.prototype.defaultErrorProcess = function( response, e )
 {
     "use strict";        

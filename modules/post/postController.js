@@ -50,9 +50,25 @@ async function createPost(userInfo, _, body) {
 }
 
 async function updatePost(userInfo, params, body) {
+    const nUserId = userInfo.userId;
+    const {postId} = params;
+    const {title, content, categoryIds} = body;
 
+    const nPostId = Number(postId);
+
+    utils.checkRequiredNumberParameter(nPostId);
+    utils.checkOptionalStringParameter(title, content);
+    utils.checkOptionalNumberArrayParameter(categoryIds);
+
+    await db.updatePost(nUserId, nPostId, title, content, categoryIds);
 }
 
 async function deletePost(userInfo, params, _) {
+    const nUserId = userInfo.userId;
+    const {postId} = params;
+    const nPostId = Number(postId);
 
+    utils.checkRequiredNumberParameter(nPostId);
+
+    await db.deletePost(nUserId, nPostId);
 }

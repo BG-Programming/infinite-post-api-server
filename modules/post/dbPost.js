@@ -1,4 +1,4 @@
-const { db_utils } = require("../libs/stdlib.js" );
+const { db_utils, error } = require("../libs/stdlib.js" );
 const query = require('./queryPost.js');
 
 module.exports.getPostList = async function (
@@ -41,3 +41,31 @@ module.exports.getPostDetail = async function(nUserId, nPostId) {
         return postDetail;
     });
 }
+
+module.exports.deletePost = async function(nUserId, nPostId) {
+    db_utils.assertNumbers(nUserId, nPostId);
+
+    return await db_utils.defaultQueryWithTransaction(async (client) => {
+        const canUpdatePost = await query.canUpdatePost(client, nUserId, nPostId);
+
+        if (canUpdatePost === false) {
+            throw error.newInstanceForbiddenError();
+        }
+
+        await query.archivePost(client, nPostId);
+    });
+}
+
+module.exports.updatePost = async function(nUserId, nPostId, title, content, categoryIds) {
+    db_utils.assertNumbers(nUserId, nPostId);
+
+    return await db_utils.defaultQueryWithTransaction(async (client) => {
+        const canUpdatePost = await query.canUpdatePost(client, nUserId, nPostId);
+
+        if (canUpdatePost === false) {
+            throw error.newInstanceForbiddenError();
+        }
+
+        await query.updatePost(client, nPostId, title, content, categoryIds);
+    });
+} 

@@ -110,3 +110,59 @@ module.exports.getPostListWithParentId = async function(client, nUserId, nParent
     return result.rows;
 }
 
+module.exports.canUpdatePost = async function(client, nUserId, nPostId) {
+    const sql = `
+        SELECT  *
+        FROM    post
+        WHERE   id = $1 and user_account_id = $2
+    `;
+
+    const result = await client.query(sql, [nPostId, nUserId]);
+    return result.rows.length === 1;
+}
+
+module.exports.archivePost = async function(client, nPostId) {
+    const sql = `
+        UPDATE  post
+        SET     is_archived = true, update_date = (now() at time zone 'utc')
+        WHERE   id = $1
+    `;
+
+    const result = await client.query(sql, [nPostId]);
+    assert(result.rowCount === 1);
+}
+
+module.exports.updatePost = async function(client, nPostId, title, content, categoryIds) {
+    let sql = `
+        UPDATE  post
+        SET     update_date = (now() at time zone 'utc')
+    `;
+
+    let paramCount = 1;
+
+    const params = [];
+
+    if (typeof title === 'string') {
+        sql += `, title = $${paramCount}`;
+        params.push(title);
+        paramCount++;
+    }
+
+    if (typeof content === 'string') {
+        sql += `, content = $${paramCount}`;
+        params.push(content);
+        paramCount++;
+    }
+
+    if (Array.isArray(categoryIds) === true) {
+        sql += `, category_ids = $${paramCount}`;
+        params.push(categoryIds);
+        paramCount++;
+    }
+
+    sql += `WHERE id = $${paramCount}`
+    params.push(nPostId);
+
+    const result = await client.query(sql, params);
+    assert(result.rowCount === 1);
+}
