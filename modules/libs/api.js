@@ -21,7 +21,8 @@ async function defaultProc(request, response, fnExecute) {
 async function defaultProcWithGuest(request, response, fnExecute) {
 	"use strict";    
 	try {
-		const result = await fnExecute(request.params, request.body);
+		const userInfo = utils.getUserInfoIfExist(request);
+		const result = await fnExecute(userInfo, request.params, request.body);
 		return utils.responseMessage( response, result );
 	}
 	catch(err) {

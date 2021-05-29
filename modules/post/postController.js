@@ -2,8 +2,8 @@ const { utils }         = require("../libs/stdlib.js" );
 const db = require("./dbPost");
 
 module.exports.route = function(api, app) {
-    api.get('/api/posts/:num/:offset',  getPostList);
-    api.get('/api/posts/:postId',       getPostDetail);
+    api.guest.get('/api/posts/:num/:offset',  getPostList);
+    api.guest.get('/api/posts/:postId',       getPostDetail);
 
     api.post('/api/post',               createPost);
     api.put('/api/posts/:postId',       updatePost);
@@ -14,12 +14,12 @@ async function getPostList(userInfo, params, body) {
     
 }
 
-
 async function getPostDetail(userInfo, params, _) {
     const {postId} = params;
-    const {userId} = userInfo;
-    const nPostId = Number(postId);
 
+    const userId = utils.getUserIdFromUserInfo(userInfo);
+    const nPostId = Number(postId);
+    
     utils.checkRequiredNumberParameter(nPostId);
 
     return await db.getPostDetail(userId, nPostId);

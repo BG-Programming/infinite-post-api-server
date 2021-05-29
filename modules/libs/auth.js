@@ -9,15 +9,16 @@ async function checkPassword(strPlainText, strEncryptedPassword ) {
     return await argon2.verify(strEncryptedPassword, strPlainText);
 }
 
-async function getUserLoginData ( client, strEmail ) {
-      const result = await client.query(           
+async function getUserLoginData ( client, strEmailOrUsername ) {
+	const lowerCaseEmailOrUsername = strEmailOrUsername.toLowerCase();
+    const result = await client.query(           
         'SELECT     id, ' +
-                    'nickname, ' +
+                    'username, ' +
                     'email, ' +
                     'trim(pw) as password ' +
         'FROM      	user_account tu ' + 
-        'WHERE      lower(email)=$1  '
-        ,[  strEmail ]
+        'WHERE      lower(email) = $1 or lower(username) = $2'
+        ,[  lowerCaseEmailOrUsername, lowerCaseEmailOrUsername ]
     );
 
     // No search user
@@ -25,14 +26,14 @@ async function getUserLoginData ( client, strEmail ) {
         throw error.newInstanceNotFoundData(strEmail + " is not member");
 
     assert(result.rowCount === 1);
-    return result.rows[0];    
+    return result.rows[0];
 };
 
 
-async function login ( strEmailOrNickname, strPassword ) {
+async function login ( strEmailOrUsername, strPassword ) {
     "use strict";    
     return await db_utils.defaultQueryWithTransaction(async (client)=>{
-        let userData = await getUserLoginData(client, strEmailOrNickname );
+        let userData = await getUserLoginData(client, strEmailOrUsername );
 		const isVerify = await checkPassword(strPassword, userData.password);  
 		
         if( isVerify === false )

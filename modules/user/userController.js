@@ -3,26 +3,26 @@ const auth              = require("../libs/auth");
 const db     	  	    = require("./dbUser.js" );
 
 module.exports.route = function(api, app) {
-    api.guest.post('/api/login',       login);
+    api.guest.post('/api/login',            login);
     api.guest.post('/api/signup',           signup);
 }
 
 async function signup(_, body) {
     "use strict";
 
-    const {email, password, nickname} = body;
-    utils.checkRequiredStringParameter(email, password, nickname);
-    await db.signup(email, nickname, password);
+    const {email, password, username} = body;
+    utils.checkRequiredStringParameter(email, password, username);
+    await db.signup(email, username, password);
 }
 
 async function login(_, body) {
     "use strict";
     
-    const {email, password} = body;
-    utils.checkRequiredStringParameter(email, password);   
+    const {emailOrUsername, password} = body;
+    utils.checkRequiredStringParameter(emailOrUsername, password);   
 
-    const strEmail = email.toLowerCase();
-    const jsonUserData = await auth.login( strEmail, body.password );
+    const strEmailOrUsername = emailOrUsername.toLowerCase();
+    const jsonUserData = await auth.login( strEmailOrUsername, body.password );
 
     let strSecurityToken = auth.getSecurityToken( jsonUserData.email );
 

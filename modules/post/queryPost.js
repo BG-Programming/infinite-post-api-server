@@ -48,19 +48,36 @@ const likeTypeQuery = `
     ), null) as "likeType"
 `;
 
+
+function getPostSelectQuery(p, ua) {
+    return `
+        ${p}.id
+        , ${p}.user_account_id as "userAccountId"
+        , ${ua}.display_name as "userDisplayName"
+        , ${p}.parent_id as "parentId"
+        , ${p}.num_of_children as "numOfChildren"
+        , ${p}.title
+        , ${p}.content
+        , ${p}.category_ids as "categoryIds"
+        , ${p}.is_archived as "isArchived"
+        , ${p}.create_date as "createDate"
+        , ${p}.update_date as "updateDate"
+        , COALESCE((
+            SELECT  like_type
+            FROM    user_like_or_dislike_post
+            WHERE   post_id = ${p}.id and user_account_id = ${ua}.id
+        ), null) as "likeType"
+    `;
+}
+
 module.exports.getPostDetail = async function(client, nUserId, nPostId) {
     const query = `
-        select      p.*,
-                    COALESCE((
-                        select  like_type
-                        from    user_like_or_dislike_post
-                        where   post_id = $1 and user_account_id = $2
-                    ), null) as "likeType"
-        from        post as p
-        where       id = $1 
+        SELECT      ${getPostSelectQuery('p', 'ua')}
+        FROM        post as p, user_account ua
+        WHERE       p.id = $1 and p.user_account_id = ua.id
     `;
 
-    const result = await client.query(query, [nPostId, nUserId]);  
+    const result = await client.query(query, [nPostId]);  
 
     assert(result.rowCount === 1);
 
@@ -69,16 +86,12 @@ module.exports.getPostDetail = async function(client, nUserId, nPostId) {
 
 module.exports.getPostListWithParentId = async function(client, nUserId, nParentId) {
     const query = `
-        select      p.* ,
-                    COALESCE((
-                        select  like_type
-                        from    user_like_or_dislike_post
-                        where   post_id = p.id and user_account_id = $2
-                    ), null) as "likeType"
-        from        post as p
-        where       parent_id = $1
+        SELECT      ${getPostSelectQuery('p', 'ua')}
+        FROM        post as p, user_account as ua
+        WHERE       p.parent_id = $1 and p.user_account_id = ua.id
     `;
 
-    const result = await client.query(query, [nParentId, nUserId]);
+    const result = await client.query(query, [nParentId]);
     return result.rows;
 }
+

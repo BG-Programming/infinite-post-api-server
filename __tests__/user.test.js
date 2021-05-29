@@ -3,10 +3,34 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("bg-programming-api-test", () => {
+
+  it("login", async (done) => {
+    testPostDetail(app, done, 12);
+  });
+});
+
+function testLogin() {
+  request(app)
+    .post("/api/login")
+    .send({emailOrUsername: 'root_user', password: '1234'})
+    .set("Accept", "application/json")
+    .expect("Content-Type", /json/)
+    .expect(200)
+    .then(res => {
+      console.log('>>', res.body);
+      // resolve(res.body.token);
+      done();
+    })
+    .catch(err => {
+      // console.error(err);
+      done(err)
+    });
+}
+
   // it('signup 200', async (done) => {
   //   await request(app)
   //       .post('/api/signup')
-  //       .send({email: 'root@programming.com', nickname: 'root_user', password: '1234'})
+  //       .send({email: 'test@programming.com', username: 'testUser', password: '1234'})
   //       .set("Accept", "application/json")
   //       .expect(200)
   //       .then(res => {
@@ -19,40 +43,27 @@ describe("bg-programming-api-test", () => {
   //       });
   // });
 
-  it("login", async (done) => {
-    const resToken = await new Promise((resolve, reject) => {
-      request(app)
-        .post("/api/login")
-        .send({email: 'root@programming.com', password: '1234'})
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(200)
-        .then(res => {
-          resolve(res.body.token);
-          // done();
-        })
-        .catch(err => {
-          // console.error(err);
-          done(err)
-        });
-    });
 
-    await request(app)
-      .get("/api/posts/12")
-      .set("Authorization", resToken)
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(200)
-      .then(res => {
-        done();
-      })
-      .catch(err => {
-        done(err)
-      });
+ // const resToken = await new Promise((resolve, reject) => {
+    //   request(app)
+    //     .post("/api/login")
+    //     .send({email: 'root@programming.com', password: '1234'})
+    //     .set("Accept", "application/json")
+    //     .expect("Content-Type", /json/)
+    //     .expect(200)
+    //     .then(res => {
+    //       resolve(res.body.token);
+    //       // done();
+    //     })
+    //     .catch(err => {
+    //       // console.error(err);
+    //       done(err)
+    //     });
+    // });
 
     // await request(app)
     //   .post("/api/post")
-    //   .send({parentId: 12, title: "random 123123123123", content: "good job~!"})
+    //   .send({parentId: 17, title: "this is child post!", content: "good job~!!"})
     //   .set("Authorization", resToken)
     //   .set('Accept', 'application/json')
     //   .expect("Content-Type", /json/)
@@ -66,5 +77,23 @@ describe("bg-programming-api-test", () => {
     //     // reject(err);
     //     done(err)
     //   });
-  });
-});
+
+    
+  // });
+
+
+  function testPostDetail(app, done, postId) {
+    console.log('!@#!@#@!#!@', postId)
+    request(app)
+      .get(`/api/posts/${postId}`)
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200)
+      .then(res => {
+        console.log(res.body);
+        done();
+      })
+      .catch(err => {
+        done(err)
+      });
+  }

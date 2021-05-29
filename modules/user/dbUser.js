@@ -3,20 +3,26 @@ const {  error,  db_utils } = require("../libs/stdlib.js" );
 const query         = require("./queryUser.js");
 const argon2        = require('argon2');
 
-module.exports.signup = async function( strEmail, strNickname, strPassword ) {
+module.exports.signup = async function( strEmail, strUsername, strPassword ) {
     "use strict";        
 
-    db_utils.assertStrings(strEmail, strNickname, strPassword);    
+    db_utils.assertStrings(strEmail, strUsername, strPassword);    
 
     await db_utils.defaultQueryWithTransaction(async (client) =>  {         
-        const userExists = await query.userExistsWithEmail(client, strEmail);       
+        const userExistsWithEmail = await query.checkIfUserExistsWithEmail(client, strEmail);
         
-        if( userExists === true ) {
+        if( userExistsWithEmail === true ) {
             throw new error.AppError(error.responseCodes.RESPONSE_BAD_REQUEST, error.Codes.ERROR_CODE_EMAIL_ALREADY_EXISTS );
         }
 
+        const userExistsWithUsername = await query.checkIfUserExistsWithUsername(client, strUsername);
+
+        if (userExistsWithUsername === true) {
+            throw new error.AppError(error.responseCodes.RESPONSE_BAD_REQUEST, error.Codes.ERROR_DUPLICATE_NAME );
+        }
+
         const strEncryptedPassword = await encryptPassword(strPassword);
-        await query.signup(client, strEmail, strEncryptedPassword, strNickname);
+        await query.signup(client, strEmail, strEncryptedPassword, strUsername);
     });
 };
 

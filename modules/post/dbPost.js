@@ -20,7 +20,7 @@ module.exports.createPost = async function(
 }
 
 module.exports.getPostDetail = async function(nUserId, nPostId) {
-    db_utils.assertNumbers(nUserId, nPostId);
+    db_utils.assertNumbers(nPostId);
 
     return await db_utils.defaultQueryWithTransaction(async (client) => {
         const postDetail = await query.getPostDetail(client, nUserId, nPostId);
