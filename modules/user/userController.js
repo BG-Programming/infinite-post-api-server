@@ -7,7 +7,7 @@ module.exports.route = function(api, app) {
     api.guest.post('/api/signup',           signup);
 }
 
-async function signup(_, body) {
+async function signup(userInfo, params, body) {
     "use strict";
 
     const {email, password, username} = body;
@@ -15,10 +15,11 @@ async function signup(_, body) {
     await db.signup(email, username, password);
 }
 
-async function login(_, body) {
+async function login(userInfo, params, body) {
     "use strict";
     
     const {emailOrUsername, password} = body;
+    
     utils.checkRequiredStringParameter(emailOrUsername, password);   
 
     const strEmailOrUsername = emailOrUsername.toLowerCase();

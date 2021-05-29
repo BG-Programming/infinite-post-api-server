@@ -1,6 +1,18 @@
 const { db_utils } = require("../libs/stdlib.js" );
 const query = require('./queryPost.js');
 
+module.exports.getPostList = async function (
+    nUserId,
+    nNum,
+    nOffset
+) {
+    db_utils.assertNumbers(nNum, nOffset);
+
+    return await db_utils.defaultQuery(async (client) => {
+        return await query.getPostList(client, nUserId, nNum, nOffset);
+    })
+}
+
 module.exports.createPost = async function(
     nUserId,
     nParentIdOrNull,

@@ -1,5 +1,24 @@
 const { assert } = require("../libs/stdlib.js" );
 
+module.exports.getPostList = async function (
+    client,
+    nUserId,
+    nNum,
+    nOffset
+) {
+    const sql = `
+        SELECT      ${getPostSelectQuery('p', 'ua', nUserId)}
+        FROM        post p, user_account ua
+        WHERE       p.user_account_id = ua.id and p.is_archived = false
+        ORDER BY    p.create_date DESC
+        LIMIT       $1
+        OFFSET      $2
+    `;
+
+    const result = await client.query(sql, [nNum, nOffset]);
+    return result.rows;
+}
+
 module.exports.createPost = async function (
     client, 
     nUserId,
@@ -8,7 +27,7 @@ module.exports.createPost = async function (
     strContent,
 ) {
     const sql = `
-        insert into post(user_account_id, parent_id, title, content)
+        INSERT INTO post(user_account_id, parent_id, title, content)
         values($1, $2, $3, $4) returning id
     `;
 
@@ -18,9 +37,9 @@ module.exports.createPost = async function (
 
 module.exports.addOneToNumOfChildren = async function(client, nPostId) {
     const selectQuery = `
-        select num_of_children as "numOfChildren"
-        from post
-        where id = $1
+        SELECT      num_of_children as "numOfChildren"
+        FROM        post
+        WHERE       id = $1
     `;
 
     const selectResult = await client.query(selectQuery, [nPostId]);
@@ -30,9 +49,9 @@ module.exports.addOneToNumOfChildren = async function(client, nPostId) {
     const {numOfChildren} = selectResult.rows[0];
 
     const updateQuery = `
-        update post
-        set num_of_children = $1
-        where id = $2
+        UPDATE      post
+        SET         num_of_children = $1
+        WHERE       id = $2
     `;
 
     const updateResult = await client.query(updateQuery, [numOfChildren + 1, nPostId]);
@@ -40,17 +59,8 @@ module.exports.addOneToNumOfChildren = async function(client, nPostId) {
     assert(updateResult.rowCount === 1);
 }
 
-const likeTypeQuery = `
-    COALESCE((
-        select like_type
-        from user_like_or_dislike_post
-        where post_id = $1 and user_account_id = $2
-    ), null) as "likeType"
-`;
-
-
-function getPostSelectQuery(p, ua) {
-    return `
+function getPostSelectQuery(p, ua, userId) {
+    const ret = `
         ${p}.id
         , ${p}.user_account_id as "userAccountId"
         , ${ua}.display_name as "userDisplayName"
@@ -62,17 +72,22 @@ function getPostSelectQuery(p, ua) {
         , ${p}.is_archived as "isArchived"
         , ${p}.create_date as "createDate"
         , ${p}.update_date as "updateDate"
-        , COALESCE((
-            SELECT  like_type
-            FROM    user_like_or_dislike_post
-            WHERE   post_id = ${p}.id and user_account_id = ${ua}.id
-        ), null) as "likeType"
+        , ${userId === null 
+                ? 'null as "likeType"'
+                : `COALESCE((
+                    SELECT  like_type
+                    FROM    user_like_or_dislike_post
+                    WHERE   post_id = ${p}.id and user_account_id = ${userId}
+                ), null) as "likeType"`
+            }
     `;
+
+    return ret;
 }
 
 module.exports.getPostDetail = async function(client, nUserId, nPostId) {
     const query = `
-        SELECT      ${getPostSelectQuery('p', 'ua')}
+        SELECT      ${getPostSelectQuery('p', 'ua', nUserId)}
         FROM        post as p, user_account ua
         WHERE       p.id = $1 and p.user_account_id = ua.id
     `;
@@ -86,7 +101,7 @@ module.exports.getPostDetail = async function(client, nUserId, nPostId) {
 
 module.exports.getPostListWithParentId = async function(client, nUserId, nParentId) {
     const query = `
-        SELECT      ${getPostSelectQuery('p', 'ua')}
+        SELECT      ${getPostSelectQuery('p', 'ua', nUserId)}
         FROM        post as p, user_account as ua
         WHERE       p.parent_id = $1 and p.user_account_id = ua.id
     `;

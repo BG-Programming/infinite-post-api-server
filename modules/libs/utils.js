@@ -42,7 +42,6 @@ Utils.prototype.sendErrorMessage = function ( response, nResponseCode, nErrorCod
 	var strMessageBuffer = (strMessage) ?  strMessage : error.getString(nErrorCode) ;
 	console.log("strMessageBuffer : " + strMessageBuffer);
 
-
 	response.writeHead( nResponseCode, {"Content-Type" : "application/json"} );
 	var jsonResult = 
 	{

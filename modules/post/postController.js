@@ -11,7 +11,15 @@ module.exports.route = function(api, app) {
 };
 
 async function getPostList(userInfo, params, body) {
+    const {num, offset} = params;
     
+    const userId = utils.getUserIdFromUserInfo(userInfo);
+    const nNum = Number(num);
+    const nOffset = Number(offset);
+
+    utils.checkRequiredNumberParameter(nNum, nOffset);
+
+    return await db.getPostList(userId, nNum, nOffset);
 }
 
 async function getPostDetail(userInfo, params, _) {
