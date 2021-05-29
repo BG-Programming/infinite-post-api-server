@@ -2,9 +2,8 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("post-test", () => {
-
     testCreatePost('hahaha', 'hello world');
-    testPostDetail(13, true);
+    testPostDetail(23, true);
     testPostList(10, 0, false);
     testDeletePost(19);
     testUpdatePost(21, null, null, [1]);
@@ -110,6 +109,7 @@ function testPostDetail(postId, withAuth) {
             .expect("Content-Type", /json/)
             .expect(200)
             .then(res => {
+                console.log(res.body);
                 done();
             })
             .catch(err => {

@@ -2,7 +2,6 @@ const assert 			= require("assert");
 const { v4: uuidv4 } 	= require('uuid');
 const error 			= require("./error.js");
 const auth 				= require("./auth.js" );
-const { userInfo } = require("os");
 
 function Utils()
 {	

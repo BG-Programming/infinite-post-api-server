@@ -70,8 +70,8 @@ function getPostSelectQuery(p, ua, userId) {
         , ${p}.content
         , ${p}.category_ids as "categoryIds"
         , ${p}.is_archived as "isArchived"
-        , ${p}.create_date as "createDate"
-        , ${p}.update_date as "updateDate"
+        , EXTRACT(EPOCH FROM ${p}.create_date) as "createDate"
+        , EXTRACT(EPOCH FROM ${p}.update_date) as "updateDate"
         , ${userId === null 
                 ? 'null as "likeType"'
                 : `COALESCE((
