@@ -2,12 +2,33 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("post-test", () => {
-    testCreatePost('hahaha', 'hello world');
-    testPostDetail(23, true);
-    testPostList(10, 0, false);
-    testDeletePost(19);
-    testUpdatePost(21, null, null, [1]);
+    // testCreatePost('hahaha', 'hello world');
+    // testPostList(10, 0, false);
+    // testDeletePost(19);
+    // testUpdatePost(23, null, null, [1]);
+    testLikeOrDisLike(21, null);
+    testPostDetail(21, true);
 });
+
+function testLikeOrDisLike(postId, likeType) {
+    it("like_post", async (done) => {
+        let userToken = null;
+        userToken = await getUserToken();
+
+        request(app)
+            .post(`/api/posts/${postId}/like`)
+            .send({likeType})
+            .set("Accept", "application/json")
+            .set("Authorization", userToken)
+            .expect(200)
+            .then(res => {
+                done();
+            })
+            .catch(err => {
+                done(err)
+            });
+    });
+}
 
 function testCreatePost(title, content) {
     it("create_post", async (done) => {
@@ -109,7 +130,7 @@ function testPostDetail(postId, withAuth) {
             .expect("Content-Type", /json/)
             .expect(200)
             .then(res => {
-                console.log(res.body);
+                console.log(res.body)
                 done();
             })
             .catch(err => {
@@ -122,7 +143,7 @@ function getUserToken() {
     return new Promise((resolve, reject) => {
         request(app)
             .post("/api/login")
-            .send({emailOrUsername: 'root_user', password: '1234'})
+            .send({emailOrUsername: 'abc', password: '1234'})
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(200)

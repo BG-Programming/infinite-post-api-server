@@ -1,4 +1,4 @@
-const { utils }         = require("../libs/stdlib.js" );
+const { utils, error, define }         = require("../libs/stdlib.js" );
 const db = require("./dbPost");
 
 module.exports.route = function(api, app) {
@@ -8,7 +8,24 @@ module.exports.route = function(api, app) {
     api.post('/api/post',               createPost);
     api.put('/api/posts/:postId',       updatePost);
     api.delete('/api/posts/:postId',    deletePost);
+    api.post('/api/posts/:postId/like', likeOrDislikePost);
 };
+
+async function likeOrDislikePost(userInfo, params, body) {
+    const {postId} = params;
+    const {likeType} = body;
+    const userId = utils.getUserIdFromUserInfo(userInfo);
+    const nPostId = Number(postId);
+    
+    utils.checkRequiredNumberParameter(nPostId);
+    utils.checkOptionalStringParameter(likeType);
+
+    if (likeType !== null && (likeType === undefined || define.postLikeType.isValid(likeType) === false)) {
+        throw error.newInstanceInvalidParameter();
+    }
+
+    await db.likeOrDislikePost(userId, nPostId, likeType);
+}
 
 async function getPostList(userInfo, params, body) {
     const {num, offset} = params;

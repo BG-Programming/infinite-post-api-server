@@ -32,10 +32,10 @@ CREATE TABLE "user_account" (
   CREATE TABLE "user_like_or_dislike_post" (
     "user_account_id"       int           references "user_account"(id),
     "post_id"               int           references post(id),
-    "like_type"             like_type     not null,
+    "like_type"             like_type,
   
     "create_date"           timestamp     without time zone not null default (now() at time zone 'utc'),
-  
+    "update_date"           timestamp     without time zone
     primary key("user_account_id", "post_id")
   );
 

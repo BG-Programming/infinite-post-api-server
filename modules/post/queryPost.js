@@ -1,5 +1,27 @@
 const { assert } = require("../libs/stdlib.js" );
 
+module.exports.likeOrDislikePost = async function (
+    client,
+    nUserId,
+    nPostId,
+    strLikeType,
+) {
+    console.log('>>', nUserId);
+    console.log('>>', nPostId);
+    console.log('>>', strLikeType);
+    const sql = `
+        INSERT INTO user_like_or_dislike_post(user_account_id, post_id, like_type)
+        VALUES ($1, $2, $3)
+        ON CONFLICT ON CONSTRAINT user_like_or_dislike_post_pkey DO
+        UPDATE
+        SET like_type = $3, update_date = (now() at time zone 'utc')
+    `;
+
+    const result = await client.query(sql, [nUserId, nPostId, strLikeType]);
+    console.log('>>>>>>>', result);
+    assert(result.rowCount === 1);
+}
+
 module.exports.getPostList = async function (
     client,
     nUserId,

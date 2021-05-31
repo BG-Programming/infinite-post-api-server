@@ -10,7 +10,7 @@ module.exports.getPostList = async function (
 
     return await db_utils.defaultQuery(async (client) => {
         return await query.getPostList(client, nUserId, nNum, nOffset);
-    })
+    });
 }
 
 module.exports.createPost = async function(
@@ -69,3 +69,11 @@ module.exports.updatePost = async function(nUserId, nPostId, title, content, cat
         await query.updatePost(client, nPostId, title, content, categoryIds);
     });
 } 
+
+module.exports.likeOrDislikePost = async function(nUserId, nPostId, likeType) {
+    db_utils.assertNumbers(nUserId, nPostId);
+    
+    await db_utils.defaultQuery(async (client) => {
+        await query.likeOrDislikePost(client, nUserId, nPostId, likeType);
+    })
+}
