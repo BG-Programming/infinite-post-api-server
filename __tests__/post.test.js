@@ -6,7 +6,7 @@ describe("post-test", () => {
     // testPostList(10, 0, false);
     // testDeletePost(19);
     // testUpdatePost(23, null, null, [1]);
-    testLikeOrDisLike(21, null);
+    // testLikeOrDisLike(21, null);
     testPostDetail(21, true);
 });
 

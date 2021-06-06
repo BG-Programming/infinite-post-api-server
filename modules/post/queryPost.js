@@ -6,9 +6,6 @@ module.exports.likeOrDislikePost = async function (
     nPostId,
     strLikeType,
 ) {
-    console.log('>>', nUserId);
-    console.log('>>', nPostId);
-    console.log('>>', strLikeType);
     const sql = `
         INSERT INTO user_like_or_dislike_post(user_account_id, post_id, like_type)
         VALUES ($1, $2, $3)
@@ -18,7 +15,7 @@ module.exports.likeOrDislikePost = async function (
     `;
 
     const result = await client.query(sql, [nUserId, nPostId, strLikeType]);
-    console.log('>>>>>>>', result);
+    
     assert(result.rowCount === 1);
 }
 
@@ -86,7 +83,7 @@ function getPostSelectQuery(p, ua, userId) {
         ${p}.id
         , ${p}.user_account_id as "userAccountId"
         , ${ua}.display_name as "userDisplayName"
-        , ${p}.parent_id as "parentId"
+        
         , ${p}.num_of_children as "numOfChildren"
         , ${p}.title
         , ${p}.content

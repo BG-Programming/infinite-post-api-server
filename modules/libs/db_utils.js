@@ -2,10 +2,10 @@
 const { Pool, Client } = require('pg');
 
 const pool = new Pool({
-  user: 'tony',
+  user: 'jhpark',
   host: 'localhost',
   port: 5432,
-  database: 'bg_programming_infinite_posts',
+  database: 'infinite_post',
 //   password: 'h!re~city'
 });
 

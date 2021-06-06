@@ -1,6 +1,7 @@
 CREATE TABLE "user_account" (
     "id"            serial        primary key,
-    "nickname"      varchar(30)   not null unique,
+    "user_name"     varchar(30)   not null unique,
+    "display_name"  varchar(128)  not null,
     "email"         varchar(100)  not null unique,
     "pw"            varchar(100)  not null,
     "is_archived"   boolean       not null default false,
@@ -35,7 +36,7 @@ CREATE TABLE "user_account" (
     "like_type"             like_type,
   
     "create_date"           timestamp     without time zone not null default (now() at time zone 'utc'),
-    "update_date"           timestamp     without time zone
+    "update_date"           timestamp     without time zone,
     primary key("user_account_id", "post_id")
   );
 
@@ -47,5 +48,3 @@ CREATE TABLE "user_account" (
   
     primary key("user_account_id", "post_id")
   );
-
-  insert into post(user_account_id, parent_id, title) values (NULL, NULL, 'ROOT POST');

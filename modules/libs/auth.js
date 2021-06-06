@@ -13,11 +13,11 @@ async function getUserLoginData ( client, strEmailOrUsername ) {
 	const lowerCaseEmailOrUsername = strEmailOrUsername.toLowerCase();
     const result = await client.query(           
         'SELECT     id, ' +
-                    'username, ' +
+                    'user_name, ' +
                     'email, ' +
                     'trim(pw) as password ' +
         'FROM      	user_account tu ' + 
-        'WHERE      lower(email) = $1 or lower(username) = $2'
+        'WHERE      lower(email) = $1 or lower(user_name) = $2'
         ,[  lowerCaseEmailOrUsername, lowerCaseEmailOrUsername ]
     );
 
