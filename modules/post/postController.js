@@ -35,6 +35,32 @@ module.exports.route = function(api, app) {
      *                              $ref: '#/components/schemas/Post'
      */
     api.guest.get('/api/posts/:num/:offset',  getPostList);
+
+
+    /**
+     * @swagger
+     * /api/posts/{postId}:
+     *  get:
+     *      tags:
+     *          - POST
+     * 
+     *      description: 포스트 상세 조회
+     * 
+     *      parameters:
+     *          - in: path
+     *            name: postId
+     *            description: 포스트 아이디
+     *            required: true
+     *            schema:
+     *              type: integer
+     * 
+     *      responses:
+     *          '200':
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          $ref: '#/components/schemas/Post'
+     */
     api.guest.get('/api/posts/:postId',       getPostDetail);
 
     api.post('/api/post',               createPost);
