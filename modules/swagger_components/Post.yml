@@ -1,0 +1,34 @@
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        userAccountId:
+          type: integer
+        userDisplayName:
+          type: string
+        numOfChildren:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        categoryIds:
+          type: array
+          items:
+            type: integer
+        isArchived:
+          type: boolean
+        createDate:
+          type: integer
+        updateDate:
+          type: integer
+        likeType:
+          type: string
+          nullable: true
+          enum:
+            - like
+            - dislike
+        

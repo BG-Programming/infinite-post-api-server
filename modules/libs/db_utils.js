@@ -2,11 +2,11 @@
 const { Pool, Client } = require('pg');
 
 const pool = new Pool({
-  user: 'jhpark',
+  user: 'tony',
   host: 'localhost',
   port: 5432,
   database: 'infinite_post',
-//   password: 'h!re~city'
+  password: 'goodjobtony'
 });
 
 const assert      = require("assert");

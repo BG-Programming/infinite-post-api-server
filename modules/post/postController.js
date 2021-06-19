@@ -2,6 +2,38 @@ const { utils, error, define }         = require("../libs/stdlib.js" );
 const db = require("./dbPost");
 
 module.exports.route = function(api, app) {
+    /**
+     * @swagger
+     * /api/posts/{num}/{offset}:
+     *  get:
+     *      tags:
+     *          - POST
+     * 
+     *      description: 포스트 리스트 조회
+     * 
+     *      parameters:
+     *          - in: path
+     *            name: num
+     *            description: 반환할 리스트 갯수
+     *            required: true
+     *            schema:
+     *              type: integer
+     *          - in: path
+     *            name: offset
+     *            description: 리스트 조회 시작지점
+     *            required: true
+     *            schema: 
+     *              type: integer
+     * 
+     *      responses:
+     *          '200':
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          type: array
+     *                          items:
+     *                              $ref: '#/components/schemas/Post'
+     */
     api.guest.get('/api/posts/:num/:offset',  getPostList);
     api.guest.get('/api/posts/:postId',       getPostDetail);
 

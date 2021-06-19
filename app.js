@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const app = express();
+const { swaggerUi, specs } = require('./modules/swagger');
 
 // Release 에서는 사용하지 않을것 
 app.use(cors());
@@ -17,6 +18,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* modules main */
 require('./modules/main.js').main(app);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
