@@ -12,12 +12,14 @@ const options = {
         basePath: '/'
     },
     apis: [
-        'modules/post/postController.js', 
-        'modules/swagger_components/*'
+        `${__dirname}/post/postController.js`, 
+        `${__dirname}/swagger_components/*`
     ]
 };
 
 const specs = swaggerJsdoc(options);
+
+console.log('>>>>>', __dirname)
 
 module.exports = {
     swaggerUi,
