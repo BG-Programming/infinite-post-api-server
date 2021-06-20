@@ -15,6 +15,49 @@ async function signup(userInfo, params, body) {
     await db.signup(email, username, password);
 }
 
+
+/**
+ * @swagger
+ * /api/login:
+ *  post:
+ *      tags:
+ *          - USER
+ * 
+ *      description: 로그인
+ * 
+ *      parameters:
+ *          - in: body
+ *            name: emailOrUsername
+ *            description: 이메일 또는 유저이름
+ *            required: true
+ *            schema:
+ *              type: string
+ *          - in: body
+ *            name: password
+ *            description: 패스워드
+ *            required: true
+ *            schema:
+ *              type: string
+ * 
+ *      responses:
+ *          '200':
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              token:
+ *                                  type: string
+ *                              userInfo:
+ *                                  type: object
+ *                                  properties:
+ *                                      id:
+ *                                          type: integer
+ *                                      userName:
+ *                                          type: string
+ *                                      email:
+ *                                          type: string
+ */
 async function login(userInfo, params, body) {
     "use strict";
     

@@ -13,6 +13,7 @@ const options = {
     },
     apis: [
         `${__dirname}/post/postController.js`, 
+        `${__dirname}/user/userController.js`, 
         `${__dirname}/swagger_components/*`
     ]
 };

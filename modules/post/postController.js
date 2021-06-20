@@ -2,65 +2,7 @@ const { utils, error, define }         = require("../libs/stdlib.js" );
 const db = require("./dbPost");
 
 module.exports.route = function(api, app) {
-    /**
-     * @swagger
-     * /api/posts/{num}/{offset}:
-     *  get:
-     *      tags:
-     *          - POST
-     * 
-     *      description: 포스트 리스트 조회
-     * 
-     *      parameters:
-     *          - in: path
-     *            name: num
-     *            description: 반환할 리스트 갯수
-     *            required: true
-     *            schema:
-     *              type: integer
-     *          - in: path
-     *            name: offset
-     *            description: 리스트 조회 시작지점
-     *            required: true
-     *            schema: 
-     *              type: integer
-     * 
-     *      responses:
-     *          '200':
-     *              content:
-     *                  application/json:
-     *                      schema:
-     *                          type: array
-     *                          items:
-     *                              $ref: '#/components/schemas/Post'
-     */
     api.guest.get('/api/posts/:num/:offset',  getPostList);
-
-
-    /**
-     * @swagger
-     * /api/posts/{postId}:
-     *  get:
-     *      tags:
-     *          - POST
-     * 
-     *      description: 포스트 상세 조회
-     * 
-     *      parameters:
-     *          - in: path
-     *            name: postId
-     *            description: 포스트 아이디
-     *            required: true
-     *            schema:
-     *              type: integer
-     * 
-     *      responses:
-     *          '200':
-     *              content:
-     *                  application/json:
-     *                      schema:
-     *                          $ref: '#/components/schemas/Post'
-     */
     api.guest.get('/api/posts/:postId',       getPostDetail);
 
     api.post('/api/post',               createPost);
@@ -85,6 +27,38 @@ async function likeOrDislikePost(userInfo, params, body) {
     await db.likeOrDislikePost(userId, nPostId, likeType);
 }
 
+/**
+ * @swagger
+ * /api/posts/{num}/{offset}:
+ *  get:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 리스트 조회
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: num
+ *            description: 반환할 리스트 갯수
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - in: path
+ *            name: offset
+ *            description: 리스트 조회 시작지점
+ *            required: true
+ *            schema: 
+ *              type: integer
+ * 
+ *      responses:
+ *          '200':
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/Post'
+ */
 async function getPostList(userInfo, params, body) {
     const {num, offset} = params;
     
@@ -97,6 +71,31 @@ async function getPostList(userInfo, params, body) {
     return await db.getPostList(userId, nNum, nOffset);
 }
 
+
+/**
+ * @swagger
+ * /api/posts/{postId}:
+ *  get:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 상세 조회
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 포스트 아이디
+ *            required: true
+ *            schema:
+ *              type: integer
+ * 
+ *      responses:
+ *          '200':
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Post'
+ */
 async function getPostDetail(userInfo, params, _) {
     const {postId} = params;
 

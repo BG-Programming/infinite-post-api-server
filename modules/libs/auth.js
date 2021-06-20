@@ -13,7 +13,7 @@ async function getUserLoginData ( client, strEmailOrUsername ) {
 	const lowerCaseEmailOrUsername = strEmailOrUsername.toLowerCase();
     const result = await client.query(           
         'SELECT     id, ' +
-                    'user_name as userName, ' +
+                    'user_name as "userName", ' +
                     'email, ' +
                     'trim(pw) as password ' +
         'FROM      	user_account tu ' + 

@@ -3,7 +3,7 @@ const app = require('../app');
 
 describe("user-test", () => {
   testSignup('abc1234@naver.com', 'abc', '1234');
-  // testLogin('root_user', '1234');
+  testLogin('abc', '1234');
 });
 
 function testLogin(emailOrUsername, password) {
@@ -15,6 +15,7 @@ function testLogin(emailOrUsername, password) {
       .expect("Content-Type", /json/)
       .expect(200)
       .then(res => {
+        console.log('login >>> ', res.body);
         done();
       })
       .catch(err => {
