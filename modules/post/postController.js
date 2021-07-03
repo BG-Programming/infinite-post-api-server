@@ -15,6 +15,33 @@ module.exports.route = function(api, app) {
     api.post('/api/posts/:postId/like',             likeOrDislikePost);
 };
 
+/**
+ * @swagger
+ * /api/posts/{postId}/links/{linkId}:
+ *  delete:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 링크 삭제
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 소스 포스트 ID
+ *            required: true
+ *            schema:
+ *              type: integer
+ *          - in: path
+ *            name: linkId
+ *            description: 삭제할 링크 ID
+ *            required: true
+ *            schema: 
+ *              type: integer
+ * 
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function deletePostLink(userInfo, params, body) {
     const {postId, linkId} = params;
     const userId = utils.getUserIdFromUserInfo(userInfo);
@@ -27,6 +54,36 @@ async function deletePostLink(userInfo, params, body) {
     await db.deletePostLink(userId, nPostId, nLinkId);
 }
 
+/**
+ * @swagger
+ * /api/posts/{postId}/link:
+ *  post:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 링크 생성
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 소스 포스트 ID
+ *            required: true
+ *            schema:
+ *              type: integer
+ * 
+ *          - in: body
+ *            schema:
+ *              type: object
+ *              required:
+ *                  - targetPostId
+ *              properties:
+ *                  targetPostId:
+ *                      type: integer
+ *                      
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function createPostLink(userInfo, params, body) {
     const {postId} = params;
     const {targetPostId} = body;
@@ -41,6 +98,32 @@ async function createPostLink(userInfo, params, body) {
     await db.createPostLink(userId, nPostId, nTargetPostId);
 }
 
+/**
+ * @swagger
+ * /api/posts/{postId}/links:
+ *  get:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 링크 리스트
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 소스 포스트 ID
+ *            required: true
+ *            schema:
+ *              type: integer
+ *                      
+ *      responses:
+ *          '200':
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/PostLink'
+ */
 async function getPostLinkList(userInfo, params, body) {
     const {postId} = params;
 

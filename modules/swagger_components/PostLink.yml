@@ -1,0 +1,16 @@
+components:
+  schemas:
+    PostLink:
+      type: object
+      properties:
+        linkId:
+          type: integer
+        targetPostId:
+          type: integer
+        targetPostTitle:
+          type: string
+        targetPostContent:
+          type: string
+        linkCreateDate:
+          type: integer
+        
