@@ -2,14 +2,55 @@ const { utils, error, define }         = require("../libs/stdlib.js" );
 const db = require("./dbPost");
 
 module.exports.route = function(api, app) {
-    api.guest.get('/api/posts/:num/:offset',  getPostList);
-    api.guest.get('/api/posts/:postId',       getPostDetail);
+    api.get('/api/posts/:postId/links',             getPostLinkList);
+    api.post('/api/posts/:postId/link',             createPostLink);
+    api.delete('/api/posts/:postId/links/:linkId',  deletePostLink);
 
-    api.post('/api/post',               createPost);
-    api.put('/api/posts/:postId',       updatePost);
-    api.delete('/api/posts/:postId',    deletePost);
-    api.post('/api/posts/:postId/like', likeOrDislikePost);
+    api.guest.get('/api/posts/:num/:offset',        getPostList);
+    api.guest.get('/api/posts/:postId',             getPostDetail);
+
+    api.post('/api/post',                           createPost);
+    api.put('/api/posts/:postId',                   updatePost);
+    api.delete('/api/posts/:postId',                deletePost);
+    api.post('/api/posts/:postId/like',             likeOrDislikePost);
 };
+
+async function deletePostLink(userInfo, params, body) {
+    const {postId, linkId} = params;
+    const userId = utils.getUserIdFromUserInfo(userInfo);
+
+    const nPostId = Number(postId);
+    const nLinkId = Number(linkId);
+
+    utils.checkRequiredNumberParameter(nPostId, nLinkId);
+
+    await db.deletePostLink(userId, nPostId, nLinkId);
+}
+
+async function createPostLink(userInfo, params, body) {
+    const {postId} = params;
+    const {targetPostId} = body;
+
+    const nPostId = Number(postId);
+    const nTargetPostId = Number(targetPostId);
+
+    const userId = utils.getUserIdFromUserInfo(userInfo);
+
+    utils.checkRequiredNumberParameter(nPostId, nTargetPostId);
+
+    await db.createPostLink(userId, nPostId, nTargetPostId);
+}
+
+async function getPostLinkList(userInfo, params, body) {
+    const {postId} = params;
+
+    const nPostId = Number(postId);
+    const userId = utils.getUserIdFromUserInfo(userInfo);
+
+    utils.checkRequiredNumberParameter(nPostId);
+
+    return await db.getPostLinkList(userId, nPostId);
+}
 
 async function likeOrDislikePost(userInfo, params, body) {
     const {postId} = params;

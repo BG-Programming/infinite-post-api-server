@@ -1,5 +1,55 @@
 const { assert } = require("../libs/stdlib.js" );
 
+module.exports.deletePostLink = async function (
+    client,
+    nLinkId
+) {
+    const sql = `
+        DELETE FROM post_link
+        WHERE id = $1
+    `;
+
+    const result = await client.query(sql, [nLinkId]);
+
+    assert(result.rowCount === 1);
+}
+
+module.exports.createPostLink = async function(
+    client,
+    nSrcPostId,
+    nTargetPostId
+) {
+    const sql = `
+        INSERT INTO post_link (src_id, target_id)
+        VALUES ($1, $2)
+    `;
+
+    const result = await client.query(sql, [nSrcPostId, nTargetPostId]);
+
+    assert(result.rowCount === 1);
+}
+
+module.exports.getPostLinkList = async function (
+    client,
+    nPostId
+) {
+    const sql = `
+        SELECT  pl.id as "linkId"
+                , p.id as "targetPostId"
+                , p.title as "targetPostTitle"
+                , p.content as "targetPostContent"
+                , EXTRACT(EPOCH FROM pl.create_date) as "linkCreateDate"
+
+        FROM    post_link pl, post p
+
+        WHERE   pl.target_id = p.id
+                and pl.src_id = $1
+    `;
+
+    const result = await client.query(sql, [nPostId]);
+    return result.rows;
+}
+
 module.exports.likeOrDislikePost = async function (
     client,
     nUserId,

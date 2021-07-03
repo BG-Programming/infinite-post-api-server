@@ -2,13 +2,75 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("post-test", () => {
-    // testCreatePost('hahaha', 'hello world');
-    // testPostList(10, 0, false);
+    // for (let i = 11; i <= 20; i++) {
+    //     testCreatePostLink(1, i + 1);
+    // }
+
+    testGetPostLinkList(1);
+    // testCreatePost(`test post (${i})`, `hello world!!! ${i}`);
+    testPostList(10, 0, false);
     // testDeletePost(19);
     // testUpdatePost(23, null, null, [1]);
-    // testLikeOrDisLike(21, null);
-    testPostDetail(21, true);
+    testLikeOrDisLike(21, null);
+    testDeletePostLink(1, 1);
+    // testPostDetail(21, true);
 });
+
+function testDeletePostLink(postId, linkId) {
+    it("delete_post_link", async (done) => {
+        const userToken = await getUserToken();
+
+        request(app)
+            .delete(`/api/posts/${postId}/links/${linkId}`)
+            .set("Accept", "application/json")
+            .set("Authorization", userToken)
+            .expect(200)
+            .then(res => {
+                done();
+            })
+            .catch(err => {
+                done(err)
+            });
+    });
+}
+
+function testGetPostLinkList(srcPostId) {
+    it("get_post_link_list", async (done) => {
+        const userToken = await getUserToken();
+
+        request(app)
+            .get(`/api/posts/${srcPostId}/links`)
+            .set("Accept", "application/json")
+            .set("Authorization", userToken)
+            .expect("Content-Type", /json/)
+            .expect(200)
+            .then(res => {
+                done();
+            })
+            .catch(err => {
+                done(err)
+            });
+    });
+}
+
+function testCreatePostLink(srcPostId, targetPostId) {
+    it("create_post_link", async (done) => {
+        const userToken = await getUserToken();
+
+        request(app)
+            .post(`/api/posts/${srcPostId}/link`)
+            .send({targetPostId})
+            .set("Accept", "application/json")
+            .set("Authorization", userToken)
+            .expect(200)
+            .then(res => {
+                done();
+            })
+            .catch(err => {
+                done(err)
+            });
+    });
+}
 
 function testLikeOrDisLike(postId, likeType) {
     it("like_post", async (done) => {
@@ -143,7 +205,7 @@ function getUserToken() {
     return new Promise((resolve, reject) => {
         request(app)
             .post("/api/login")
-            .send({emailOrUsername: 'abc', password: '1234'})
+            .send({emailOrUsername: 'abc1234@naver.com', password: '1234'})
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(200)
