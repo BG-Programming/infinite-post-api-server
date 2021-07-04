@@ -1,4 +1,4 @@
-CREATE TABLE "user_account" (
+  CREATE TABLE "user_account" (
     "id"            serial        primary key,
     "user_name"     varchar(30)   not null unique,
     "display_name"  varchar(128)  not null,
@@ -56,4 +56,4 @@ CREATE TABLE "user_account" (
     "create_date"   timestamp       without time zone not null default (now() at time zone 'utc'),
   
     unique("src_id", "target_id")
-);
+  );

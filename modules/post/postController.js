@@ -5,7 +5,7 @@ module.exports.route = function(api, app) {
     api.get('/api/posts/:postId/links',             getPostLinkList);
     api.post('/api/posts/:postId/link',             createPostLink);
     api.delete('/api/posts/:postId/links/:linkId',  deletePostLink);
-
+    
     api.guest.get('/api/posts/:num/:offset',        getPostList);
     api.guest.get('/api/posts/:postId',             getPostDetail);
 

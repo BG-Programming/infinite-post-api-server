@@ -31,4 +31,10 @@ components:
           enum:
             - like
             - dislike
+        children:
+          type: array
+          items:
+            type: object
+        parentInfo:
+          type: object
         

@@ -149,6 +149,7 @@ function getPostSelectQuery(p, ua, userId) {
                     WHERE   post_id = ${p}.id and user_account_id = ${userId}
                 ), null) as "likeType"`
             }
+        , ${p}.parent_id as "parentId"
     `;
 
     return ret;

@@ -77,7 +77,17 @@ module.exports.getPostDetail = async function(nUserId, nPostId) {
     return await db_utils.defaultQueryWithTransaction(async (client) => {
         const postDetail = await query.getPostDetail(client, nUserId, nPostId);
         const children = await query.getPostListWithParentId(client, nUserId, nPostId);
+
         postDetail.children = children;
+
+        const parentInfo = postDetail.parentId === null 
+            ? null 
+            : await query.getPostDetail(client, nUserId, postDetail.parentId);
+
+        postDetail.parentInfo = parentInfo;
+        
+        delete postDetail.postId;
+
         return postDetail;
     });
 }

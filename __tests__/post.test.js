@@ -2,17 +2,25 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("post-test", () => {
-    // for (let i = 11; i <= 20; i++) {
-    //     testCreatePostLink(1, i + 1);
+    // for (let i = 10; i < 20; ++i) {
+    //     testCreatePost(`child post ${i}`, `this is child post ${i}`, 1);
     // }
 
-    testGetPostLinkList(1);
+    testPostDetail(1, false);
+    // testGetPostLinkList(33);
+    // testDeletePostLink(33, 1);
+    // testCreatePostLink(33, 6);
+    // for (let i = 0; i < 5; i++) {
+    //     testCreatePost(`bg's post (${i})`, `hello universe! ${i}`);
+    // }
+
+    // testGetPostLinkList(1);
     // testCreatePost(`test post (${i})`, `hello world!!! ${i}`);
-    testPostList(10, 0, false);
+    // testPostList(10, 0, false);
     // testDeletePost(19);
     // testUpdatePost(23, null, null, [1]);
-    testLikeOrDisLike(21, null);
-    testDeletePostLink(1, 1);
+    // testLikeOrDisLike(21, null);
+    // testDeletePostLink(1, 1);
     // testPostDetail(21, true);
 });
 
@@ -45,6 +53,7 @@ function testGetPostLinkList(srcPostId) {
             .expect("Content-Type", /json/)
             .expect(200)
             .then(res => {
+                console.log('>>>', res.body);
                 done();
             })
             .catch(err => {
@@ -92,14 +101,14 @@ function testLikeOrDisLike(postId, likeType) {
     });
 }
 
-function testCreatePost(title, content) {
+function testCreatePost(title, content, parentId) {
     it("create_post", async (done) => {
         let userToken = null;
         userToken = await getUserToken();
 
         request(app)
             .post(`/api/post`)
-            .send({title, content})
+            .send({title, content, parentId})
             .set("Accept", "application/json")
             .set("Authorization", userToken)
             .expect(200)
@@ -205,7 +214,7 @@ function getUserToken() {
     return new Promise((resolve, reject) => {
         request(app)
             .post("/api/login")
-            .send({emailOrUsername: 'abc1234@naver.com', password: '1234'})
+            .send({emailOrUsername: 'bg@naver.com', password: '1234'})
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(200)

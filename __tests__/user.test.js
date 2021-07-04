@@ -2,8 +2,8 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("user-test", () => {
-  // testSignup('goodjob@naver.com', 'goodjob', '1234');
-  testLogin('goodjob@naver.com', '1234');
+  testSignup('bg@naver.com', 'bg', '1234');
+  testLogin('abc1234@naver.com', '1234');
 });
 
 function testLogin(emailOrUsername, password) {
