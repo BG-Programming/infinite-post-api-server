@@ -212,7 +212,7 @@ module.exports.archivePost = async function(client, nPostId) {
     assert(result.rowCount === 1);
 }
 
-module.exports.updatePost = async function(client, nPostId, title, content, categoryIds) {
+module.exports.updatePost = async function(client, nPostId, title, content) {
     let sql = `
         UPDATE  post
         SET     update_date = (now() at time zone 'utc')
@@ -231,12 +231,6 @@ module.exports.updatePost = async function(client, nPostId, title, content, cate
     if (typeof content === 'string') {
         sql += `, content = $${paramCount}`;
         params.push(content);
-        paramCount++;
-    }
-
-    if (Array.isArray(categoryIds) === true) {
-        sql += `, category_ids = $${paramCount}`;
-        params.push(categoryIds);
         paramCount++;
     }
 

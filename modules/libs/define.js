@@ -23,7 +23,6 @@ var Define =
 		like: 'like',
 		dislike: 'dislike',
 		isValid: (str) => {
-			console.log('?>>>>', this.like, str)
 			return str === 'like' || str === 'dislike';
 		}
 	},

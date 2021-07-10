@@ -72,6 +72,7 @@ async function deletePostLink(userInfo, params, body) {
  *              type: integer
  * 
  *          - in: body
+ *            required: true
  *            schema:
  *              type: object
  *              required:
@@ -135,6 +136,42 @@ async function getPostLinkList(userInfo, params, body) {
     return await db.getPostLinkList(userId, nPostId);
 }
 
+
+/**
+ * @swagger
+ * /api/posts/{postId}/like:
+ *  post:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 좋아요(like), 싫어요(dislike), 좋아요 싫어요 취소(null)
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 포스트 ID
+ *            required: true
+ *            schema:
+ *              type: integer
+ * 
+ *          - in: body
+ *            required: true
+ *            schema:
+ *              type: object
+ *              required:
+ *                  - likeType
+ *              properties:
+ *                  likeType:
+ *                      type: string
+ *                      nullable: true
+ *                      enum:
+ *                          - like
+ *                          - dislike
+ *                      
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function likeOrDislikePost(userInfo, params, body) {
     const {postId} = params;
     const {likeType} = body;
@@ -173,7 +210,13 @@ async function likeOrDislikePost(userInfo, params, body) {
  *            required: true
  *            schema: 
  *              type: integer
- * 
+ *          - in: query
+ *            name: title
+ *            description: 포스트 타이틀. 값 존재 시 타이틀로 검색
+ *            required: false
+ *            schema:
+ *              type: string
+ *          
  *      responses:
  *          '200':
  *              content:
@@ -232,6 +275,36 @@ async function getPostDetail(userInfo, params, _) {
     return await db.getPostDetail(userId, nPostId);
 }
 
+/**
+ * @swagger
+ * /api/post:
+ *  post:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 생성
+ * 
+ *      parameters:
+ *          - in: body
+ *            required: true
+ *            schema:
+ *              type: object
+ *              required:
+ *                  - title
+ *              properties:
+ *                  title:
+ *                      type: string
+ *                  content:
+ *                      type: string
+ *                      nullable: true
+ *                  parentId:
+ *                      type: integer
+ *                      nullable: true
+ *                     
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function createPost(userInfo, _, body) {
     const nUserId = userInfo.userId;
     const {parentId, title, content} = body;
@@ -248,20 +321,73 @@ async function createPost(userInfo, _, body) {
     );
 }
 
+/**
+ * @swagger
+ * /api/posts/{postId}:
+ *  put:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 업데이트
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 포스트 아이디
+ *            required: true
+ *            schema:
+ *              type: integer
+ * 
+ *          - in: body
+ *            required: true
+ *            schema:
+ *              type: object
+ *              properties:
+ *                  title:
+ *                      type: string
+ *                      nullable: true
+ *                  content:
+ *                      type: string
+ *                      nullable: true
+ *                     
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function updatePost(userInfo, params, body) {
     const nUserId = userInfo.userId;
     const {postId} = params;
-    const {title, content, categoryIds} = body;
+    const {title, content} = body;
 
     const nPostId = Number(postId);
 
     utils.checkRequiredNumberParameter(nPostId);
     utils.checkOptionalStringParameter(title, content);
-    utils.checkOptionalNumberArrayParameter(categoryIds);
 
-    await db.updatePost(nUserId, nPostId, title, content, categoryIds);
+    await db.updatePost(nUserId, nPostId, title, content);
 }
 
+/**
+ * @swagger
+ * /api/posts/{postId}:
+ *  delete:
+ *      tags:
+ *          - POST
+ * 
+ *      description: 포스트 삭제
+ * 
+ *      parameters:
+ *          - in: path
+ *            name: postId
+ *            description: 포스트 아이디
+ *            required: true
+ *            schema:
+ *              type: integer
+ *                     
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function deletePost(userInfo, params, _) {
     const nUserId = userInfo.userId;
     const {postId} = params;

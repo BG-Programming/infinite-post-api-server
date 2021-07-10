@@ -102,12 +102,12 @@ module.exports.deletePost = async function(nUserId, nPostId) {
     });
 }
 
-module.exports.updatePost = async function(nUserId, nPostId, title, content, categoryIds) {
+module.exports.updatePost = async function(nUserId, nPostId, title, content) {
     db_utils.assertNumbers(nUserId, nPostId);
 
     return await db_utils.defaultQueryWithTransaction(async (client) => {
         await checkIfUserHasPermissionToUpdatePost(client, nUserId, nPostId);
-        await query.updatePost(client, nPostId, title, content, categoryIds);
+        await query.updatePost(client, nPostId, title, content);
     });
 } 
 
