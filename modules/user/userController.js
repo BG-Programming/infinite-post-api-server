@@ -7,6 +7,36 @@ module.exports.route = function(api, app) {
     api.guest.post('/api/signup',           signup);
 }
 
+/**
+ * @swagger
+ * /api/signup:
+ *  post:
+ *      tags:
+ *          - USER
+ * 
+ *      description: 회원가입
+ * 
+ *      parameters:
+ *          - in: body
+ *            required: true
+ *            schema:
+ *              type: object
+ *              required:
+ *                  - email
+ *                  - password
+ *                  - username
+ *              properties:
+ *                  email:
+ *                      type: string
+ *                  password:
+ *                      type: string
+ *                  username:
+ *                      type: string
+ *                     
+ *      responses:
+ *          '200':
+ *              description: OK
+ */
 async function signup(userInfo, params, body) {
     "use strict";
 
@@ -27,17 +57,17 @@ async function signup(userInfo, params, body) {
  * 
  *      parameters:
  *          - in: body
- *            name: emailOrUsername
- *            description: 이메일 또는 유저이름
  *            required: true
  *            schema:
- *              type: string
- *          - in: body
- *            name: password
- *            description: 패스워드
- *            required: true
- *            schema:
- *              type: string
+ *              type: object
+ *              required:
+ *                  - emailOrUsername
+ *                  - password
+ *              properties:
+ *                  emailOrUsername:
+ *                      type: string
+ *                  password:
+ *                      type: string
  * 
  *      responses:
  *          '200':
