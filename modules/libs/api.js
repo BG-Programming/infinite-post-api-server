@@ -9,7 +9,7 @@ async function defaultProc(request, response, fnExecute) {
 		if( !userInfo )
 			throw error.newInstanceForbiddenError();
 		
-		const result = await fnExecute(userInfo, request.params, request.body);
+		const result = await fnExecute(userInfo, {...request.params, ...request.query}, request.body);
 		return utils.responseMessage( response, result );
 	}
 	catch(err) {
@@ -22,7 +22,7 @@ async function defaultProcWithGuest(request, response, fnExecute) {
 	"use strict";    
 	try {
 		const userInfo = utils.getUserInfoIfExist(request);
-		const result = await fnExecute(userInfo, request.params, request.body);
+		const result = await fnExecute(userInfo, {...request.params, ...request.query}, request.body);
 		return utils.responseMessage( response, result );
 	}
 	catch(err) {

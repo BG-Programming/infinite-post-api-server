@@ -6,7 +6,10 @@ describe("post-test", () => {
     //     testCreatePost(`child post ${i}`, `this is child post ${i}`, 1);
     // }
 
-    testPostDetail(1, false);
+    // testPostDetail(1, true);
+    testPostList(10, 0, null, false);
+    testPostList(10, 10, null, false);
+
     // testGetPostLinkList(33);
     // testDeletePostLink(33, 1);
     // testCreatePostLink(33, 6);
@@ -161,7 +164,7 @@ function testDeletePost(postId) {
     });
 }
 
-function testPostList(num, offset, withAuth) {
+function testPostList(num, offset, title, withAuth) {
     it("post_list", async (done) => {
 
         let userToken = null;
@@ -170,13 +173,20 @@ function testPostList(num, offset, withAuth) {
             userToken = await getUserToken();
         }
 
+        let url = `/api/posts/${num}/${offset}`;
+        
+        if (typeof title === 'string') {
+            url += `?title=${title}`;
+        }
+
         request(app)
-            .get(`/api/posts/${num}/${offset}`)
+            .get(url)
             .set("Accept", "application/json")
             .set("Authorization", userToken)
             .expect("Content-Type", /json/)
             .expect(200)
             .then(res => {
+                console.log(res.body.map(e => e.title).join('\n'))
                 done();
             })
             .catch(err => {
@@ -214,7 +224,7 @@ function getUserToken() {
     return new Promise((resolve, reject) => {
         request(app)
             .post("/api/login")
-            .send({emailOrUsername: 'bg@naver.com', password: '1234'})
+            .send({emailOrUsername: 'abc', password: '1234'})
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
             .expect(200)

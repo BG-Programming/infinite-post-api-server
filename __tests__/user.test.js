@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 
 describe("user-test", () => {
-  testSignup('bg@naver.com', 'bg', '1234');
+  testSignup('abc1234@naver.com', 'abc', '1234');
   testLogin('abc1234@naver.com', '1234');
 });
 

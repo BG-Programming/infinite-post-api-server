@@ -44,12 +44,13 @@ module.exports.getPostLinkList = async function (
 module.exports.getPostList = async function (
     nUserId,
     nNum,
-    nOffset
+    nOffset,
+    strTitle
 ) {
     db_utils.assertNumbers(nNum, nOffset);
 
     return await db_utils.defaultQuery(async (client) => {
-        return await query.getPostList(client, nUserId, nNum, nOffset);
+        return await query.getPostList(client, nUserId, nNum, nOffset, strTitle);
     });
 }
 

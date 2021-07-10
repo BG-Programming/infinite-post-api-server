@@ -73,12 +73,22 @@ module.exports.getPostList = async function (
     client,
     nUserId,
     nNum,
-    nOffset
+    nOffset,
+    strTitle
 ) {
+    let whereCondition = `
+        p.user_account_id = ua.id 
+        and p.is_archived = false
+    `;
+
+    if (typeof strTitle === 'string' && strTitle.trim().length > 0) {
+        whereCondition += `and p.title like '%${strTitle}%'`;
+    }
+
     const sql = `
         SELECT      ${getPostSelectQuery('p', 'ua', nUserId)}
         FROM        post p, user_account ua
-        WHERE       p.user_account_id = ua.id and p.is_archived = false
+        WHERE       ${whereCondition}
         ORDER BY    p.create_date DESC
         LIMIT       $1
         OFFSET      $2

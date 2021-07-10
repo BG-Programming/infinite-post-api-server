@@ -184,15 +184,16 @@ async function likeOrDislikePost(userInfo, params, body) {
  *                              $ref: '#/components/schemas/Post'
  */
 async function getPostList(userInfo, params, body) {
-    const {num, offset} = params;
+    const {num, offset, title} = params;
     
     const userId = utils.getUserIdFromUserInfo(userInfo);
     const nNum = Number(num);
     const nOffset = Number(offset);
 
     utils.checkRequiredNumberParameter(nNum, nOffset);
+    utils.checkOptionalStringParameter(title);
 
-    return await db.getPostList(userId, nNum, nOffset);
+    return await db.getPostList(userId, nNum, nOffset, title);
 }
 
 
