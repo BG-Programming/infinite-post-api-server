@@ -20,7 +20,7 @@ module.exports.route = function(api, app) {
  * /api/posts/{postId}/links/{linkId}:
  *  delete:
  *      tags:
- *          - POST
+ *          - POST LINK
  * 
  *      description: 포스트 링크 삭제
  * 
@@ -59,7 +59,7 @@ async function deletePostLink(userInfo, params, body) {
  * /api/posts/{postId}/link:
  *  post:
  *      tags:
- *          - POST
+ *          - POST LINK
  * 
  *      description: 포스트 링크 생성
  * 
@@ -104,7 +104,7 @@ async function createPostLink(userInfo, params, body) {
  * /api/posts/{postId}/links:
  *  get:
  *      tags:
- *          - POST
+ *          - POST LINK
  * 
  *      description: 포스트 링크 리스트
  * 
