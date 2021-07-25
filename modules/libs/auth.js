@@ -23,11 +23,11 @@ async function getUserLoginData ( client, strEmailOrUsername ) {
 
     // No search user
     if( result.rowCount === 0 )
-        throw error.newInstanceNotFoundData(strEmail + " is not member");
+        throw error.newInstanceNotFoundData(strEmailOrUsername + " is not member");
 
     assert(result.rowCount === 1);
     return result.rows[0];
-};
+}
 
 
 async function login ( strEmailOrUsername, strPassword ) {
@@ -42,7 +42,7 @@ async function login ( strEmailOrUsername, strPassword ) {
         delete userData.password;
         return userData;
     });
-};
+}
 
 
 

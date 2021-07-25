@@ -2,7 +2,7 @@ const { utils }         = require("../libs/stdlib.js" );
 const auth              = require("../libs/auth");
 const db     	  	    = require("./dbUser.js" );
 
-module.exports.route = function(api, app) {
+module.exports.route = function(api) {
     api.guest.post('/api/login',            login);
     api.guest.post('/api/signup',           signup);
 }

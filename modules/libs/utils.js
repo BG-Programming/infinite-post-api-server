@@ -9,9 +9,9 @@ function Utils()
 }
 
 Utils.prototype.checkEmailFormat = function (email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if( !re.test(String(email).toLowerCase()) )
-    	throw error.newInstanceBadRequest("Invalid email format.");
+		throw error.newInstanceBadRequest("Invalid email format.");
 }
 
 Utils.prototype.createUuid = function()
@@ -201,8 +201,8 @@ Utils.prototype.checkRequiredArrayParameter = function ( /* ... */ )
     {
         if( arguments[i] === undefined || arguments[i] === null || arguments[i].constructor !== Array )
         {
-        	console.log("Fail - checkRequiredArrayParameter : " + i);
-            throw new error.AppError( error.responseCodes.RESPONSE_BAD_REQUEST, error.Codes.ERROR_CODE_INVALID_PARAMETERS );
+			console.log("Fail - checkRequiredArrayParameter : " + i);
+			throw new error.AppError( error.responseCodes.RESPONSE_BAD_REQUEST, error.Codes.ERROR_CODE_INVALID_PARAMETERS );
         }
     }
 };

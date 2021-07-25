@@ -1,7 +1,7 @@
 const { utils, error, define }         = require("../libs/stdlib.js" );
 const db = require("./dbPost");
 
-module.exports.route = function(api, app) {
+module.exports.route = function(api) {
     api.get('/api/posts/:postId/links',             getPostLinkList);
     api.post('/api/posts/:postId/link',             createPostLink);
     api.delete('/api/posts/:postId/links/:linkId',  deletePostLink);
@@ -42,7 +42,7 @@ module.exports.route = function(api, app) {
  *          '200':
  *              description: OK
  */
-async function deletePostLink(userInfo, params, body) {
+async function deletePostLink(userInfo, params) {
     const {postId, linkId} = params;
     const userId = utils.getUserIdFromUserInfo(userInfo);
 
@@ -125,7 +125,7 @@ async function createPostLink(userInfo, params, body) {
  *                          items:
  *                              $ref: '#/components/schemas/PostLink'
  */
-async function getPostLinkList(userInfo, params, body) {
+async function getPostLinkList(userInfo, params) {
     const {postId} = params;
 
     const nPostId = Number(postId);
@@ -226,7 +226,7 @@ async function likeOrDislikePost(userInfo, params, body) {
  *                          items:
  *                              $ref: '#/components/schemas/Post'
  */
-async function getPostList(userInfo, params, body) {
+async function getPostList(userInfo, params) {
     const {num, offset, title} = params;
     
     const userId = utils.getUserIdFromUserInfo(userInfo);

@@ -1,5 +1,5 @@
 
-const { Pool, Client } = require('pg');
+const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'tony',
@@ -151,7 +151,7 @@ DB_Utils.prototype.endTransaction = function( err, client, done, callback  )
 	"use strict";
 	if( err )
     {
-        client.query('ROLLBACK', function(e){
+        client.query('ROLLBACK', function(){
 	        done();
 	        return callback(err);                    
         });

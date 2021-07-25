@@ -78,7 +78,7 @@ function API() {
 				await defaultProcWithGuest(request, response, fnExecute );
 			});
 		}
-	};;
+	};
 
 	return {
 		init: function (app) {
